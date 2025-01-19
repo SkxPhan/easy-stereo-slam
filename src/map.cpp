@@ -1,8 +1,9 @@
 #include "map.hpp"
 
+#include "g2o_types.hpp"
 #include <glog/logging.h>
 
-void Map::insertKeyFrame(Frame::Ptr frame) {
+void Map::InsertKeyFrame(Frame::Ptr frame) {
   current_frame_ = frame;
   if (keyframes_.find(frame->keyframe_id_) == keyframes_.end()) {
     keyframes_.insert(std::make_pair(frame->keyframe_id_, frame));
@@ -13,11 +14,11 @@ void Map::insertKeyFrame(Frame::Ptr frame) {
   }
 
   if (active_keyframes_.size() > num_active_keyframes_) {
-    removeOldKeyframe();
+    RemoveOldKeyframe();
   }
 }
 
-void Map::insertMapPoint(MapPoint::Ptr map_point) {
+void Map::InsertMapPoint(MapPoint::Ptr map_point) {
   if (landmarks_.find(map_point->id_) == landmarks_.end()) {
     landmarks_.insert(std::make_pair(map_point->id_, map_point));
     active_landmarks_.insert(std::make_pair(map_point->id_, map_point));
@@ -27,17 +28,17 @@ void Map::insertMapPoint(MapPoint::Ptr map_point) {
   }
 }
 
-void Map::removeOldKeyframe() {
+void Map::RemoveOldKeyframe() {
   if (current_frame_ == nullptr)
     return;
 
   double max_dis = 0, min_dis = 9999;
   double max_kf_id = 0, min_kf_id = 0;
-  auto Twc = current_frame_->pose().inverse();
+  auto Twc = current_frame_->Pose().inverse();
   for (const auto &kf : active_keyframes_) {
     if (kf.second == current_frame_)
       continue;
-    auto dis = (kf.second->pose() * Twc).log().norm();
+    auto dis = (kf.second->Pose() * Twc).log().norm();
     if (dis > max_dis) {
       max_dis = dis;
       max_kf_id = kf.first;
@@ -61,7 +62,7 @@ void Map::removeOldKeyframe() {
   for (auto feat : frame_to_remove->features_left_) {
     auto mp = feat->map_point_.lock();
     if (mp) {
-      mp->removeObservation(feat);
+      mp->RemoveObservation(feat);
     }
   }
   for (auto feat : frame_to_remove->features_right_) {
@@ -69,14 +70,14 @@ void Map::removeOldKeyframe() {
       continue;
     auto mp = feat->map_point_.lock();
     if (mp) {
-      mp->removeObservation(feat);
+      mp->RemoveObservation(feat);
     }
   }
 
-  cleanMap();
+  CleanMap();
 }
 
-void Map::cleanMap() {
+void Map::CleanMap() {
   int cnt_landmark_removed = 0;
   for (auto iter = active_landmarks_.begin();
        iter != active_landmarks_.end();) {

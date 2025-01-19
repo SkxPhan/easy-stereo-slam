@@ -20,32 +20,32 @@ public:
   using KeyframesType = std::unordered_map<unsigned long, Frame::Ptr>;
   using LandmarksType = std::unordered_map<unsigned long, MapPoint::Ptr>;
 
-  Map() {}
+  Map() = default;
 
-  void insertKeyFrame(Frame::Ptr frame);
-  void insertMapPoint(MapPoint::Ptr map_point);
+  void InsertKeyFrame(Frame::Ptr frame);
+  void InsertMapPoint(MapPoint::Ptr map_point);
 
-  KeyframesType getAllKeyFrames() {
+  KeyframesType GetAllKeyFrames() {
     std::unique_lock<std::mutex> lck(data_mutex_);
     return active_keyframes_;
   }
 
-  LandmarksType getAllMapPoints() {
+  LandmarksType GetAllMapPoints() {
     std::unique_lock<std::mutex> lck(data_mutex_);
     return landmarks_;
   }
 
-  KeyframesType getActiveKeyFrames() {
+  KeyframesType GetActiveKeyFrames() {
     std::unique_lock<std::mutex> lck(data_mutex_);
     return active_keyframes_;
   }
 
-  LandmarksType getActiveMapPoints() {
+  LandmarksType GetActiveMapPoints() {
     std::unique_lock<std::mutex> lck(data_mutex_);
     return active_landmarks_;
   }
 
-  void cleanMap();
+  void CleanMap();
 
 private:
   std::mutex data_mutex_;
@@ -59,7 +59,7 @@ private:
 
   int num_active_keyframes_ = 7;
 
-  void removeOldKeyframe();
+  void RemoveOldKeyframe();
 };
 
 #endif // MAP_HPP
