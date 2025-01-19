@@ -36,3 +36,6 @@
 
 # Cache file
 /.cache
+
+# Log file
+/log
