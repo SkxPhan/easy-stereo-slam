@@ -2,9 +2,10 @@
 
 #include "algorithm.hpp"
 #include "feature.hpp"
+#include "g2o/core/block_solver.h"
+#include "g2o/solvers/csparse/linear_solver_csparse.h"
 #include "g2o_types.hpp"
 #include "map.hpp"
-#include "mappoint.hpp"
 
 #include <Eigen/Core>
 #include <glog/logging.h>
@@ -41,13 +42,14 @@ void Backend::BackendLoop() {
 void Backend::Optimize(Map::KeyframesType &keyframes,
                        Map::LandmarksType &landmarks) {
   // setup g2o
-  typedef g2o::BlockSolver_6_3 BlockSolverType;
-  typedef g2o::LinearSolverCSparse<BlockSolverType::PoseMatrixType>
-      LinearSolverType;
+  using BlockSolverType = g2o::BlockSolver_6_3;
+  using LinearSolverType =
+      g2o::LinearSolverCSparse<BlockSolverType::PoseMatrixType>;
+
   auto solver = std::make_unique<g2o::OptimizationAlgorithmLevenberg>(
       std::make_unique<BlockSolverType>(std::make_unique<LinearSolverType>()));
   g2o::SparseOptimizer optimizer;
-  optimizer.setAlgorithm(solver.get());
+  optimizer.setAlgorithm(solver.release());
 
   // pose 顶点，使用Keyframe id
   std::map<unsigned long, VertexPose *> vertices;

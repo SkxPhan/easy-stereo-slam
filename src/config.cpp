@@ -3,7 +3,7 @@
 #include <glog/logging.h>
 #include <memory>
 
-bool Config::setParameterFile(const std::string &filename) {
+bool Config::SetParameterFile(const std::string &filename) {
   if (!config_) {
     config_ = std::make_shared<Config>();
   }
@@ -24,4 +24,4 @@ Config::~Config() {
   }
 }
 
-std::shared_ptr<Config> Config::config_ = nullptr;
+std::shared_ptr<Config> Config::config_;

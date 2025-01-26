@@ -22,7 +22,6 @@ public:
   bool is_outlier_ = false;
   bool is_on_left_image_ = true;
 
-public:
   Feature() = default;
 
   Feature(std::shared_ptr<Frame> frame, const cv::KeyPoint &kp)

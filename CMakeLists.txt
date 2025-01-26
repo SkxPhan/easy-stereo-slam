@@ -27,4 +27,12 @@ find_package(Sophus REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package(glog REQUIRED)
 
+FetchContent_GetProperties(g2o)
+# if(g2o_POPULATED)
+#   message(STATUS "g2o source directory: ${g2o_SOURCE_DIR}")
+#   message(STATUS "g2o binary directory: ${g2o_BINARY_DIR}")
+#   message(STATUS "g2o libraries linked: ${g2o_LIBRARIES}")
+# endif()
+
 add_subdirectory(src)
+add_subdirectory(app)

@@ -5,15 +5,15 @@
 
 #include "config.hpp"
 #include <glog/logging.h>
-#include <opencv2/videoio.hpp>
 
 bool VisualOdometry::Init() {
   if (!Config::SetParameterFile(config_file_path_)) {
     return false;
   }
 
-  dataset_ =
-      std::make_shared<Dataset>(Config::Get<std::string>("datatset_dir"));
+  dataset_ = std::make_shared<Dataset>(Config::Get<std::string>("dataset_dir"));
+  LOG(INFO) << "Loading calibration file "
+            << Config::Get<std::string>("datatset_dir");
   CHECK_EQ(dataset_->Init(), true);
 
   frontend_ = std::make_shared<Frontend>();

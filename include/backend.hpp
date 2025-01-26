@@ -8,7 +8,6 @@
 #include <Eigen/Core>
 
 #include "camera.hpp"
-#include "frame.hpp"
 #include "map.hpp"
 
 class Backend {

@@ -13,8 +13,9 @@ public:
     return T(Config::config_->file_[key]);
   }
 
+  Config() {}
+
 private:
-  Config() = default;
   static std::shared_ptr<Config> config_;
   cv::FileStorage file_;
 };

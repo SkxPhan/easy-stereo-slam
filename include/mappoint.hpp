@@ -22,7 +22,6 @@ public:
   int observed_times_ = 0;
   std::list<std::weak_ptr<Feature>> observations_;
 
-public:
   MapPoint() = default;
 
   MapPoint(long id, Eigen::Vector3d position);

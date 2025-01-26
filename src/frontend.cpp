@@ -137,16 +137,16 @@ int Frontend::EstimateCurrentPose() {
   using LinearSolverType =
       g2o::LinearSolverDense<BlockSolverType::PoseMatrixType>;
 
-  auto solver = std::make_unique<g2o::OptimizationAlgorithmLevenberg>(
+  auto solver = new g2o::OptimizationAlgorithmLevenberg(
       std::make_unique<BlockSolverType>(std::make_unique<LinearSolverType>()));
   g2o::SparseOptimizer optimizer;
-  optimizer.setAlgorithm(solver.get());
+  optimizer.setAlgorithm(solver);
 
   // vertex
-  auto vertex_pose = std::make_unique<VertexPose>(); // camera vertex_pose
+  auto vertex_pose = new VertexPose(); // camera vertex_pose
   vertex_pose->setId(0);
   vertex_pose->setEstimate(current_frame_->Pose());
-  optimizer.addVertex(vertex_pose.get());
+  optimizer.addVertex(vertex_pose);
 
   // K
   Eigen::Matrix3d K = camera_left_->K();
@@ -159,13 +159,14 @@ int Frontend::EstimateCurrentPose() {
     auto mp = current_frame_->features_left_[i]->map_point_.lock();
     if (mp) {
       features.push_back(current_frame_->features_left_[i]);
-      EdgeProjectionPoseOnly *edge = new EdgeProjectionPoseOnly(mp->pos_, K);
+      auto edge = new EdgeProjectionPoseOnly(mp->pos_, K);
       edge->setId(index);
-      edge->setVertex(0, vertex_pose.get());
+      edge->setVertex(0, vertex_pose);
       edge->setMeasurement(myslam::algo::toVec2(
           current_frame_->features_left_[i]->position_.pt));
       edge->setInformation(Eigen::Matrix2d::Identity());
-      edge->setRobustKernel(std::make_unique<g2o::RobustKernelHuber>().get());
+      edge->setRobustKernel(
+          std::make_unique<g2o::RobustKernelHuber>().release());
       edges.push_back(edge);
       optimizer.addEdge(edge);
       index++;
@@ -215,7 +216,7 @@ int Frontend::EstimateCurrentPose() {
       feat->is_outlier_ = false; // maybe we can still use it in future
     }
   }
-  return features.size() - cnt_outlier;
+  return static_cast<int>(features.size()) - cnt_outlier;
 }
 
 int Frontend::TrackLastFrame() {

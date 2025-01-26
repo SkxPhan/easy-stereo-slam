@@ -28,7 +28,6 @@ public:
   std::vector<std::shared_ptr<Feature>> features_left_;
   std::vector<std::shared_ptr<Feature>> features_right_;
 
-public:
   Frame() = default;
 
   Frame(long id, double timestamp, const Sophus::SE3d &pose,

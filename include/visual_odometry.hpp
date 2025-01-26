@@ -7,7 +7,6 @@
 #include <Eigen/Core>
 
 #include "backend.hpp"
-#include "camera.hpp"
 #include "dataset.hpp"
 #include "frontend.hpp"
 
@@ -16,7 +15,7 @@ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   using Ptr = std::shared_ptr<VisualOdometry>;
 
-  VisualOdometry(std::string &condif_path);
+  VisualOdometry(std::string &config_path) : config_file_path_(config_path) {};
 
   bool Init();
   void Run();
