@@ -19,11 +19,10 @@ public:
   cv::KeyPoint position_;
   std::weak_ptr<MapPoint> map_point_;
 
-  bool is_outliser_ = false;
+  bool is_outlier_ = false;
   bool is_on_left_image_ = true;
 
-public:
-  Feature() {}
+  Feature() = default;
 
   Feature(std::shared_ptr<Frame> frame, const cv::KeyPoint &kp)
       : frame_(frame), position_(kp) {}

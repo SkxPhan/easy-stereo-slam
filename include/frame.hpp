@@ -28,25 +28,24 @@ public:
   std::vector<std::shared_ptr<Feature>> features_left_;
   std::vector<std::shared_ptr<Feature>> features_right_;
 
-public:
-  Frame() {};
+  Frame() = default;
 
   Frame(long id, double timestamp, const Sophus::SE3d &pose,
         const cv::Mat &left, const cv::Mat &right);
 
-  Sophus::SE3d pose() {
+  Sophus::SE3d Pose() {
     std::unique_lock<std::mutex> lock(pose_mutex_);
     return pose_;
   }
 
-  void setPose(const Sophus::SE3d &pose) {
+  void SetPose(const Sophus::SE3d &pose) {
     std::unique_lock<std::mutex> lock(pose_mutex_);
     pose_ = pose;
   }
 
-  void setKeyFrame();
+  void SetKeyFrame();
 
-  static std::shared_ptr<Frame> createFrame();
+  static std::shared_ptr<Frame> CreateFrame();
 };
 
 #endif // FRAME_HPP

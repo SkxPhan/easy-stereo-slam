@@ -17,40 +17,39 @@ public:
 
   std::mutex data_mutex_;
   unsigned long id_ = 0;
-  bool is_outlier = false;
+  bool is_outlier_ = false;
   Eigen::Vector3d pos_ = Eigen::Vector3d::Zero();
   int observed_times_ = 0;
   std::list<std::weak_ptr<Feature>> observations_;
 
-public:
-  MapPoint() {}
+  MapPoint() = default;
 
   MapPoint(long id, Eigen::Vector3d position);
 
-  Eigen::Vector3d pos() {
+  Eigen::Vector3d Pos() {
     std::unique_lock<std::mutex> lock(data_mutex_);
     return pos_;
   }
 
-  void setPos(const Eigen::Vector3d &pos) {
+  void SetPos(const Eigen::Vector3d &pos) {
     std::unique_lock<std::mutex> lock(data_mutex_);
     pos_ = pos;
   }
 
-  void addObservation(std::shared_ptr<Feature> feature) {
+  void AddObservation(std::shared_ptr<Feature> feature) {
     std::unique_lock<std::mutex> lock(data_mutex_);
     observations_.push_back(feature);
     observed_times_++;
   }
 
-  void removeObservation(std::shared_ptr<Feature> feature);
+  void RemoveObservation(std::shared_ptr<Feature> feature);
 
-  std::list<std::weak_ptr<Feature>> getObs() {
+  std::list<std::weak_ptr<Feature>> GetObs() {
     std::unique_lock<std::mutex> lock(data_mutex_);
     return observations_;
   }
 
-  static MapPoint::Ptr createNewMappoint();
+  static MapPoint::Ptr CreateNewMappoint();
 };
 
 #endif // MAPPOINT_HPP
