@@ -39,3 +39,7 @@
 
 # Log file
 /log
+
+# Build files
+/out
+/build
